@@ -7,7 +7,6 @@ const app = new Koa();
 app.use(bodyParser());
 
 app.use(async ctx => {
-    console.log(ctx.request.body)
     tasks(ctx.request, ctx.response);
 });
 
