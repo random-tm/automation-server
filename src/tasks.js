@@ -12,9 +12,9 @@ let lastState = undefined;
 export default async (req, res) => {
 
     if (!dataLoaded) {
-        taskFiles = loadCode("./tasks");
-        actionFiles = loadCode("./actions");
-        cronFiles = loadCode("./cron");
+        taskFiles = await loadCode("./tasks");
+        actionFiles = await loadCode("./actions");
+        cronFiles = await loadCode("./cron");
         dataLoaded = true;
     }
 
@@ -28,8 +28,9 @@ export default async (req, res) => {
                 actionFiles[func](state, req.body);
             }
         } else if (!req.body.action) {
-            for (const func of taskFiles) {
-                taskFiles[func](req.body.state, lastState);
+            for (const func in taskFiles) {
+                console.log(`Func is ${func}`);
+                taskFiles[func].task(req.body.state, lastState);
             }
             lastState = req.body.state;
         }
@@ -54,9 +55,10 @@ const shouldExecNetFunc = (req) => {
 
 const loadCode = async (codePath) => {
     const fileNames = fs.readdirSync(codePath);
+    const files = {};
     for (const name of fileNames) {
-        const filePath = `${codePath}/${name}`;
-        files[name] = await import(filePath);
+        const sourceRelativeFilePath = `../${codePath}/${name}`;
+        files[name] = await import(sourceRelativeFilePath);
     }
     return files;
 }
