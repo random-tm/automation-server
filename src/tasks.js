@@ -1,5 +1,5 @@
 import fs from "fs";
-import * as _ from "lodash";
+import _ from "lodash";
 
 let dataLoaded = false;
 let taskFiles = {};
