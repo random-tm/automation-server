@@ -25,12 +25,11 @@ export default async (req, res) => {
             const state = _.cloneDeep(req.body["state"]);
             delete req.body["state"];
             for (const func of actionFiles) {
-                actionFiles[func].action(state, req.body);
+                actionFiles[func].default(state, req.body);
             }
         } else if (!req.body.action) {
             for (const func in taskFiles) {
-                console.log(`Func is ${func}`);
-                taskFiles[func].task(req.body.state, lastState);
+                taskFiles[func].default(req.body.state, lastState);
             }
             lastState = req.body.state;
         }
@@ -38,7 +37,7 @@ export default async (req, res) => {
         const newCron = new Date();
         const lastCronCopy = _.clone(lastCron)
         for (const func of cronFiles) {
-            cronFiles[func].cron(newCron, lastCronCopy);
+            cronFiles[func].default(newCron, lastCronCopy);
         }
         lastCron = newCron;
     }
