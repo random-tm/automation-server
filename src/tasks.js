@@ -24,7 +24,7 @@ export default async (req, res) => {
             delete req.body["action"];
             const state = _.cloneDeep(req.body["state"]);
             delete req.body["state"];
-            for (const func of actionFiles) {
+            for (const func in actionFiles) {
                 actionFiles[func].default(state, req.body);
             }
         } else if (!req.body.action) {
