@@ -6,7 +6,9 @@ export default (networkData) => {
 
 const cleanObj = (networkData) => {
     for(let key in networkData){
-        if(typeof networkData[key] == "string"){
+        if(!isNaN(parseInt(networkData[key]))){
+            networkData[key] = parseInt(networkData[key]);
+        } else if(typeof networkData[key] == "string"){
             if(networkData[key] === "false"){
                 networkData[key] = false;
             } else if (networkData[key] === "true"){
