@@ -3,3 +3,5 @@ config.json
 cron
 actions
 tasks
+shared
+devices.json
