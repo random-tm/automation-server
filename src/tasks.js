@@ -1,5 +1,6 @@
 import fs from "fs";
 import _ from "lodash";
+import network from "./network.js";
 
 let dataLoaded = false;
 let taskFiles = {};
@@ -7,7 +8,7 @@ let actionFiles = {};
 let cronFiles = {};
 
 let lastCron = undefined;
-let lastState = undefined;
+let lastState = {};
 
 export default async (req, res) => {
 
@@ -20,18 +21,19 @@ export default async (req, res) => {
 
     if (shouldExecNetFunc(req)) {
         console.log(`Executing automation as: ${JSON.stringify(req.body)} at ${new Date().toString()}`);
+        const cleanBody = network(req.body);
         if (req.body.action) {
-            delete req.body["action"];
-            const state = _.cloneDeep(req.body["state"]);
-            delete req.body["state"];
+            delete cleanBody["action"];
+            const state = _.cloneDeep(cleanBody["state"]);
+            delete cleanBody["state"];
             for (const func in actionFiles) {
-                actionFiles[func].default(state, req.body);
+                actionFiles[func].default(state, cleanBody);
             }
         } else if (!req.body.action) {
             for (const func in taskFiles) {
-                taskFiles[func].default(req.body.state, lastState);
+                taskFiles[func].default(cleanBody.state, lastState);
             }
-            lastState = req.body.state;
+            lastState = cleanBody.state;
         }
     } else {
         const newCron = new Date();
