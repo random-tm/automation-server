@@ -8,7 +8,7 @@ let actionFiles = {};
 let cronFiles = {};
 
 let lastCron = undefined;
-let lastState = {};
+let lastState = network(JSON.parse(fs.readFileSync("./state.json", {encoding: "utf-8"})));
 
 export default async (req, res) => {
 
