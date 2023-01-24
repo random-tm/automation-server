@@ -31,7 +31,7 @@ export default async (req, res) => {
             }
         } else if (!req.body.action) {
             for (const func in taskFiles) {
-                taskFiles[func].default(cleanBody.state, lastState);
+                taskFiles[func].default(cleanBody.state, lastState, cleanBody.timestamps);
             }
             lastState = cleanBody.state;
         }
